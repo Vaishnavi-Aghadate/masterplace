@@ -887,7 +887,7 @@
   font-size: 0.6rem;
 }
 
-.shorts-cta {
+/* .shorts-cta {
   text-align: center;
 }
 
@@ -910,7 +910,7 @@
 .shorts-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-}
+} */
 
 
 /* Testimonials Section Styles */

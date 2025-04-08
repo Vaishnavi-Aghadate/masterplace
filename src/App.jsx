@@ -3,6 +3,7 @@ import { useState } from 'react'
 import './App.css'
 import Navbar from './components/navbar'
 import HomePage from './components/HomePage'
+// import Aboutus from './components/Aboutus'
 
 
 function App() {
@@ -13,6 +14,8 @@ function App() {
     <div>
       <Navbar/>
       <HomePage/>
+      {/* <Aboutus/> */}
+      
     
    
     </div>
