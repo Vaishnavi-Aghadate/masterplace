@@ -1,0 +1,258 @@
+/* Navbar container */
+.navbar {
+  background-color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  height: var(--navbar-height, 65px);
+}
+
+/* Navbar inner container */
+.navbar-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+/* Logo styling */
+.logo {
+  display: flex;
+  align-items: center;
+  z-index: 1001;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  max-width: 150px;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 5px;
+  z-index: 1001;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+}
+
+.menu-icon-bar {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #333;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active .menu-icon-bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.mobile-menu-btn.active .menu-icon-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-btn.active .menu-icon-bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Navigation links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+/* Navigation links styling */
+.nav-links a {
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  transition: color 0.3s ease-in-out;
+  display: block;
+}
+
+.nav-links a:hover {
+  color: #005a5f;
+}
+
+/* User actions section */
+.user-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* "Create Listing" button */
+.create-listing {
+  background-color: #003b40;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+.create-listing:hover {
+  background-color: #005a5f;
+}
+
+/* User icons */
+.profile-icon {
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.profile-icon:hover {
+  color: #005a5f;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+  
+  .nav-links {
+    gap: 15px;
+  }
+  
+  .nav-links a {
+    font-size: 15px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+    /* flex-direction: row;  */
+    /* justify-content: space-between; */
+    margin-right: 50px;
+  }
+  
+  .nav-links {
+    position: fixed;
+    top: var(--navbar-height, 65px);
+    left: 0;
+    right: 0;
+    background-color: white;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 15px;
+    transform: translateY(-150%);
+    opacity: 0;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    height: auto;
+    max-height: calc(100vh - var(--navbar-height, 65px));
+    overflow-y: auto;
+  }
+  
+  .nav-links.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .user-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    justify-content: center;
+    padding: 15px 20px;
+    background-color: white;
+    transform: translateY(100%);
+    opacity: 0;
+    box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 998;
+  }
+  
+  .user-actions.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --navbar-height: 60px;
+  }
+  
+  .navbar {
+    padding: 10px 15px;
+  }
+  
+  .logo img {
+    height: 35px;
+  }
+  
+  .mobile-menu-btn {
+    width: 26px;
+    height: 20px;
+  }
+  
+  .menu-icon-bar {
+    height: 2px;
+  }
+  
+  .mobile-menu-btn.active .menu-icon-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  
+  .mobile-menu-btn.active .menu-icon-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+  
+  .nav-links {
+    padding: 15px;
+  }
+  
+  .user-actions {
+    padding: 12px 15px;
+  }
+  
+  .create-listing {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .profile-icon {
+    font-size: 24px;
+  }
+}
