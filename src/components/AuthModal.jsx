@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AuthModal.css";
 
-const AuthModal = ({ onClose }) => {
+const AuthModal = ({ onClose, onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -11,23 +11,31 @@ const AuthModal = ({ onClose }) => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState("");
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
     setErrors({});
+    setSuccessMessage("");
   };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     
-    // Special handling for email field to prevent unwanted characters
+    // Special handling for email field
     if (id === "email") {
-      // Only allow characters that are valid in emails
       const filteredValue = value.replace(/[^a-zA-Z0-9@._-]/g, '');
       setFormData(prev => ({
         ...prev,
         [id]: filteredValue
       }));
+    } else if (id === "password") {
+      setFormData(prev => ({
+        ...prev,
+        [id]: value
+      }));
+      checkPasswordStrength(value);
     } else {
       setFormData(prev => ({
         ...prev,
@@ -44,11 +52,38 @@ const AuthModal = ({ onClose }) => {
     }
   };
 
+  const checkPasswordStrength = (password) => {
+    if (password.length === 0) {
+      setPasswordStrength("");
+      return;
+    }
+
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const isLongEnough = password.length >= 8;
+
+    const strength = 
+      (hasUpperCase ? 1 : 0) +
+      (hasLowerCase ? 1 : 0) +
+      (hasNumbers ? 1 : 0) +
+      (hasSpecialChars ? 1 : 0) +
+      (isLongEnough ? 1 : 0);
+
+    if (strength <= 2) {
+      setPasswordStrength("Weak");
+    } else if (strength <= 4) {
+      setPasswordStrength("Moderate");
+    } else {
+      setPasswordStrength("Strong");
+    }
+  };
+
   const validate = () => {
     const newErrors = {};
-    // More strict email regex that disallows problematic special characters
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
 
     if (!isLogin && !formData.name.trim()) {
       newErrors.name = "Full name is required";
@@ -59,21 +94,13 @@ const AuthModal = ({ onClose }) => {
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email (only letters, numbers, ., _, -, and @ allowed)";
-    } else if (formData.email.includes("..")) {
-      newErrors.email = "Email cannot contain consecutive dots";
-    } else if (formData.email.startsWith(".") || formData.email.endsWith(".")) {
-      newErrors.email = "Email cannot start or end with a dot";
-    } else if (formData.email.indexOf("@") === -1) {
-      newErrors.email = "Email must contain @ symbol";
-    } else if (formData.email.indexOf("@") !== formData.email.lastIndexOf("@")) {
-      newErrors.email = "Email can only contain one @ symbol";
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "Password must be at least 8 characters with at least one letter and one number";
+      newErrors.password = "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character";
     }
 
     if (!isLogin) {
@@ -88,18 +115,47 @@ const AuthModal = ({ onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       setIsSubmitting(true);
-      // Simulate API call
-      setTimeout(() => {
-        console.log(isLogin ? "Login submitted" : "Register submitted", formData);
+      
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        if (isLogin) {
+          setSuccessMessage("Login successful! Redirecting...");
+          setTimeout(() => {
+            onLoginSuccess();
+            onClose();
+          }, 2000);
+        } else {
+          setSuccessMessage("Registration successful! You can now login.");
+          setIsLogin(true);
+          setFormData({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
+          });
+        }
+      } catch (error) {
+        setErrors({ submit: "An error occurred. Please try again." });
+      } finally {
         setIsSubmitting(false);
-        onClose(); // Close modal on successful submission
-      }, 1500);
+      }
     }
   };
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   return (
     <div className="auth-modal-overlay">
@@ -109,6 +165,13 @@ const AuthModal = ({ onClose }) => {
         </button>
         
         <h2>{isLogin ? "Login" : "Register"}</h2>
+        
+        {successMessage && (
+          <div className="success-message">
+            {successMessage}
+            <div className="progress-bar"></div>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit}>
           {!isLogin && (
@@ -149,7 +212,19 @@ const AuthModal = ({ onClose }) => {
               onChange={handleChange}
               className={errors.password ? "error" : ""}
             />
+            {formData.password && (
+              <div className={`password-strength ${passwordStrength.toLowerCase()}`}>
+                Password Strength: {passwordStrength}
+              </div>
+            )}
             {errors.password && <span className="error-message">{errors.password}</span>}
+            <div className="password-hints">
+              <span className={formData.password.length >= 8 ? "valid" : ""}>• 8+ characters</span>
+              <span className={/[A-Z]/.test(formData.password) ? "valid" : ""}>• Uppercase</span>
+              <span className={/[a-z]/.test(formData.password) ? "valid" : ""}>• Lowercase</span>
+              <span className={/\d/.test(formData.password) ? "valid" : ""}>• Number</span>
+              <span className={/[!@#$%^&*(),.?":{}|<>]/.test(formData.password) ? "valid" : ""}>• Special char</span>
+            </div>
           </div>
           
           {!isLogin && (

@@ -489,12 +489,12 @@ const HomePage = () => {
           </div>
 
           <div className="shorts-cta">
-            <button 
+            {/* <button 
               className="shorts-btn"
               onClick={() => alert('Showing more city guides')}
             >
               <i className="fas fa-compass"></i> Explore More Cities
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
@@ -710,6 +710,8 @@ const HomePage = () => {
           </ul>
         </div>
 
+            
+
         {/* <div className="links-column">
           <h4>Resources</h4>
           <ul>
@@ -733,7 +735,15 @@ const HomePage = () => {
       </div>
     </div>
 
-    Middle Section - App Download
+    {/* <div>
+          <h4>Location</h4>
+          <iframe
+            title="map"
+            src="https://maps.google.com/maps?q=pune&t=&z=13&ie=UTF8&iwloc=&output=embed"
+          ></iframe>
+        </div> */}
+
+    {/* Middle Section - App Download
     <div className="footer-middle">
       <div className="app-download">
         <div className="app-content">
@@ -760,7 +770,7 @@ const HomePage = () => {
           <img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" alt="Mobile App" />
         </div>
       </div>
-    </div>
+    </div> */}
 
     {/* Bottom Section - Copyright */}
     <div className="footer-bottom">
